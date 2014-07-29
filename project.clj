@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/data.json "0.2.4"]
                  [org.clojure/data.codec "0.1.0"]
-                 [org.bouncycastle/bcprov-jdk15 "1.46"]
+                 [org.bouncycastle/bcpkix-jdk15on "1.50"]
                  [clj-time "0.7.0"]]
 
   :profiles {:dev {:dependencies [[midje "1.6.3"  :exclusions [org.clojure/clojure]]]}}
