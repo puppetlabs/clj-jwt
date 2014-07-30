@@ -3,12 +3,15 @@
     [clj-jwt.core  :refer :all]
     [clj-jwt.key   :refer [private-key public-key]]
     [clj-time.core :refer [date-time plus days now]]
-    [midje.sweet   :refer :all]))
+    [midje.sweet   :refer :all])
+  (:import
+   [java.security Security]
+   [org.bouncycastle.jce.provider BouncyCastleProvider]))
 
 (defn with-bc-provider-fn [f]
   (try
-    (java.security.Security/addProvider
-     (org.bouncycastle.jce.provider.BouncyCastleProvider.))
+    (Security/insertProviderAt (BouncyCastleProvider.) 1)
+    (f)
     (finally
       (java.security.Security/removeProvider "BC"))))
 
@@ -145,15 +148,15 @@
     (-> claim jwt (sign :RS512 rsa-enc-prv-key) (verify rsa-dmy-key))                     => false)
 
   (with-state-changes [(around :facts (with-bc-provider-fn (fn [] ?form)))]
-    (fact "ES256 signed JWT shoud be verified."
+    (fact "ES256 signed JWT should be verified."
           (-> claim jwt (sign :ES256 ec-prv-key) (verify ec-pub-key))                 => true
           (-> claim jwt (sign :ES256 ec-prv-key) to-str str->jwt (verify ec-pub-key)) => true)
 
-    (fact "ES384 signed JWT shoud be verified."
+    (fact "ES384 signed JWT should be verified."
           (-> claim jwt (sign :ES384 ec-prv-key) (verify ec-pub-key))                 => true
           (-> claim jwt (sign :ES384 ec-prv-key) to-str str->jwt (verify ec-pub-key)) => true)
 
-    (fact "ES512 signed JWT shoud be verified."
+    (fact "ES512 signed JWT should be verified."
           (-> claim jwt (sign :ES512 ec-prv-key) (verify ec-pub-key))                 => true
           (-> claim jwt (sign :ES512 ec-prv-key) to-str str->jwt (verify ec-pub-key)) => true))
 
