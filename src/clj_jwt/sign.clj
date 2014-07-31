@@ -2,9 +2,6 @@
   (:require
     [clj-jwt.base64 :refer [url-safe-encode-str url-safe-decode]]))
 
-(java.security.Security/addProvider
- (org.bouncycastle.jce.provider.BouncyCastleProvider.))
-
 ; HMAC
 (defn- hmac-sign
   "Function to sign data with HMAC algorithm."
@@ -23,7 +20,7 @@
 (defn- rsa-sign
   "Function to sign data with RSA algorithm."
   [alg key body & {:keys [charset] :or {charset "UTF-8"}}]
-  (let [sig (doto (java.security.Signature/getInstance alg "BC")
+  (let [sig (doto (java.security.Signature/getInstance alg)
                   (.initSign key (java.security.SecureRandom.))
                   (.update (.getBytes body charset)))]
     (url-safe-encode-str (.sign sig))))
@@ -31,7 +28,7 @@
 (defn- rsa-verify
   "Function to verify data and signature with RSA algorithm."
   [alg key body signature & {:keys [charset] :or {charset "UTF-8"}}]
-  (let [sig (doto (java.security.Signature/getInstance alg "BC")
+  (let [sig (doto (java.security.Signature/getInstance alg)
                   (.initVerify key)
                   (.update (.getBytes body charset)))]
     (.verify sig (url-safe-decode signature))))
