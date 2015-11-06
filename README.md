@@ -84,6 +84,12 @@ A Clojure library for JSON Web Token(JWT) [draft-ietf-oauth-json-web-token-19](h
   (-> token str->jwt (verify ec-pub-key)))
 ```
 
+## Support
+
+To file a bug, please open a Github issue against this project. Bugs and PRs are
+addressed on a best-effort basis. Puppet Labs does not guarantee support for
+this project.
+
 ## License
 
 Copyright © 2014 [uochan](http://twitter.com/uochan)
